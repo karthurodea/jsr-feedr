@@ -3,15 +3,24 @@
 */
 
 var delayInMilliseconds = 1000; //1 second
+var results;
 
 $(document).ready(getMashable);
 $(document).on("click","#wired", getWired);
 $(document).on("click","#mash", getMashable);
 $(document).on("click","#tc", getTechCrunch);
+$(document).on("click","#search", function () {
+	document.getElementById("search").classList.add("active");
+});
 
 //click events to display/hide the pop up
 
 $(document).on("click",".articleContent", function () {
+	console.log (results);
+	var index = ($(this).data("id"));
+	var title = results.articles[index].title;
+	var description = results.articles[index].description;
+	var link = results.articles[index].url;
     document.getElementById("popUp").classList.remove("hidden");
     setTimeout(function() {
   		document.getElementById("popUp").classList.remove("loader");
@@ -52,6 +61,7 @@ xhr.send();
 
 
 promiseMash.then(function(result) {
+	results = result;
 	$( "#main" ).empty();
 	for (var i = 0; i < result.articles.length; i++){
 		var title = result.articles[i].title;
@@ -69,7 +79,7 @@ promiseMash.then(function(result) {
             <section class="featuredImage">
               <img src="${image}" alt="" />
             </section>
-            <section class="articleContent">
+            <section class="articleContent" data-id="${i}">
                 <a href="#"><h3>${title}</h3></a>
                 <h6>${author}</h6>
             </section>
@@ -101,6 +111,7 @@ xhr.send();
 });
 
 promiseCrunch.then(function(result) {
+	results = result;
 	$( "#main" ).empty();
 	for (var i = 0; i < result.articles.length; i++){
 		var title = result.articles[i].title;
@@ -118,7 +129,7 @@ promiseCrunch.then(function(result) {
             <section class="featuredImage">
               <img src="${image}" alt="" />
             </section>
-            <section class="articleContent">
+            <section class="articleContent" data-id="${i}">
                 <a href="#"><h3>${title}</h3></a>
                 <h6>${author}</h6>
             </section>
@@ -149,6 +160,7 @@ xhr.send();
 });
 
 promiseWire.then(function(result) {
+	results = result;
 	$( "#main" ).empty();
 	for (var i = 0; i < result.articles.length; i++){
 		var title = result.articles[i].title;
@@ -166,7 +178,7 @@ promiseWire.then(function(result) {
             <section class="featuredImage">
               <img src="${image}" alt="" />
             </section>
-            <section class="articleContent">
+            <section class="articleContent" data-id="${i}">
                 <a href="#"><h3>${title}</h3></a>
                 <h6>${author}</h6>
             </section>
