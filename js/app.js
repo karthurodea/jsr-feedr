@@ -2,21 +2,59 @@
   Please add all Javascript code to this file.
 */
 
-var delayInMilliseconds = 1000; //1 second
-var results;
+//global variables
 
-$(document).ready(getMashable);
-$(document).on("click","#wired", getWired);
-$(document).on("click","#mash", getMashable);
-$(document).on("click","#tc", getTechCrunch);
-$(document).on("click","#search", function () {
-	document.getElementById("search").classList.add("active");
+var delayInMilliseconds = 1500; //1.5 second
+var results;
+function pacman() {
+  document.getElementById("popUp").classList.remove("hidden");
+  setTimeout(function() {
+      document.getElementById("popUp").classList.add("hidden");
+  }, delayInMilliseconds);
+};
+
+//display pacman GIF until API call is finished, then return Mashable's headlines
+
+$(document).ready(function(){
+	pacman();
+	return getMashable();
 });
 
-//click events to display/hide the pop up
+//nav functionality to toggle between news sources. 
+
+$("#wired").click(function(){
+  pacman();
+	document.getElementById("publication").textContent="Wired";
+	return getWired();
+});
+
+$("#mash").click(function(){
+  pacman();
+	document.getElementById("publication").textContent="Mashable";
+	return getMashable();
+});
+
+$("#tc").click(function(){
+  pacman();
+	document.getElementById("publication").textContent="Tech Crunch";
+	return getTechCrunch();
+});
+
+//click handler to display/hide the search bar
+
+$("#search").click(function(){
+	$("#search").toggleClass("active");
+});
+
+//click handler to reload the page
+
+$("#reload").click(function(){
+  location.reload();
+});
+
+//click handler that displays/hides the pop up for each article
 
 $(document).on("click",".articleContent", function () {
-	console.log (results);
 	var index = ($(this).data("id"));
 	var title = results.articles[index].title;
 	var description = results.articles[index].description;
@@ -53,12 +91,11 @@ xhr.onload = function() {
     resolve(JSON.parse(xhr.responseText));
   }
   else {
-    reject(Error("It broke"+ xhr.status));
+    reject(Error("Something's Not Working As It Should :("+ xhr.status));
   }
  }
 xhr.send();
 });
-
 
 promiseMash.then(function(result) {
 	results = result;
@@ -84,7 +121,7 @@ promiseMash.then(function(result) {
                 <h6>${author}</h6>
             </section>
             <section class="impressions">
-              ${source}
+              ${i}
             </section>
             <div class="clearfix"></div>
           </article>`;
@@ -134,7 +171,7 @@ promiseCrunch.then(function(result) {
                 <h6>${author}</h6>
             </section>
             <section class="impressions">
-              ${source}
+              ${i}
             </section>
             <div class="clearfix"></div>
           </article>`;
@@ -142,6 +179,7 @@ promiseCrunch.then(function(result) {
 	}
  });
 };
+
 //GET request for top headlines from Wired
 
 function getWired() {
@@ -183,7 +221,7 @@ promiseWire.then(function(result) {
                 <h6>${author}</h6>
             </section>
             <section class="impressions">
-              ${source}
+              ${i}
             </section>
             <div class="clearfix"></div>
           </article>`;
